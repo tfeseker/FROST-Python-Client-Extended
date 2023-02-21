@@ -1,0 +1,2 @@
+git+https://github.com/tfeseker/FROST-Python-Client.git@log-readable-URLs
+geojson
