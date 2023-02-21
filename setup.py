@@ -21,7 +21,7 @@ setup(
     url=info['__url__'],
     packages=find_packages(),
     install_requires=[
-        'frost_sta_client @ git+https://github.com/tfeseker/FROST-Python-Client.git@log-readable-URLs',
+        'frost_sta_client @ git+https://github.com/tfeseker/FROST-Python-Client.git',
         'geojson'
     ],
     keywords=['sta', 'ogc', 'frost', 'sensorthingsapi', 'IoT']
