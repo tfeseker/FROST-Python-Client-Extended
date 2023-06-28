@@ -2,8 +2,6 @@
 
 This Python package is based on the [FROST-Python-Client](https://github.com/FraunhoferIOSB/FROST-Python-Client) library and aims to provide a user-friendly client as an extension to the existing package.
 
-This client requires a slightly modified version of the original FROST-Python-Client package as some pull requests have not yet been merged.
-
 ## Connecting to a SensorThings service
 
 The only class of this package is `FrostClient`. It holds the SensorThingsService as a property and offers convenience methods to interact with this service.
