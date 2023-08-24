@@ -1,4 +1,5 @@
 import frost_sta_client as fsc
+from datetime import datetime
 from dateutil.parser import parse
 from dateutil.tz import tzutc
 from frost_sta_client.model.ext.entity_type import EntityTypes
@@ -31,12 +32,12 @@ def add_filters(query, **kwargs):
                 filters.append(get_relation_filter(query.entity, relative))
         elif key in ['id', 'name', 'description'] and value != '':
             filters.append(get_string_filter(key, value))
-        elif key in ['start', 'end'] and value != '':
+        elif key in ['start', 'end'] and value is not None:
             filters.append(get_time_filter(key, value))
         elif key in ['lower_limit', 'upper_limit'] and value is not None:
             filters.append(get_limit_filter(key, value))
     if len(filters) > 0:
-        return query.filter(' and '.join(filters))
+        return query.filter(' and '.join(f for f in filters if f is not None))
     return query
 
 def add_expansion(query, **kwargs):
@@ -122,11 +123,16 @@ def get_string_filter(key, value):
     return f"'{value}' eq tolower(name)"
 
 def get_time_filter(key, value):
-    val = parse(value).astimezone(tzutc()).isoformat()
-    if key == 'start':
-        return f'phenomenonTime ge {val}'
-    elif key == 'end':
-        return f'phenomenonTime lt {val}'
+    if isinstance(value, str):
+        value = parse(value)
+    if isinstance(value, datetime):
+        value = value.astimezone(tzutc()).isoformat()
+        if key == 'start':
+            return f'phenomenonTime ge {value}'
+        elif key == 'end':
+            return f'phenomenonTime lt {value}'
+    else:
+        return None
 
 def get_limit_filter(key, value):
     if key == 'upper_limit':
