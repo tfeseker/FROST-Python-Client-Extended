@@ -7,7 +7,7 @@ def as_dataframe(entity_list):
     if entity_list.entity_class == 'frost_sta_client.model.observation.Observation':
         return DataFrame(
             [(obs.phenomenon_time, obs.result, obs.id, obs.datastream.id) for obs in entity_list],
-            columns=["phenomemon_time", "result", "id", "datastream_id"]
+            columns=["phenomenon_time", "result", "id", "datastream_id"]
         )
     else:
         raise NotImplementedError(
