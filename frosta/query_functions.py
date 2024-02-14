@@ -62,13 +62,13 @@ def get_entity_list(entities, callback=None, step_size=None, **kwargs):
     query = add_order(query, **kwargs)
     query = add_chunks(query, **kwargs)
     entity_list = query.count().list(callback, step_size)
-    match len(entity_list.entities):
-        case 0:
-            return None
-        case 1:
-            return entity_list.get(0)
-        case _:
-            return entity_list
+    # match len(entity_list.entities):
+    #     case 0:
+    #         return None
+    #     case 1:
+    #         return entity_list.get(0)
+    #     case _:
+    #         return entity_list
 
 
 def add_filters(query, **kwargs):
