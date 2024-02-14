@@ -14,5 +14,6 @@ frosta.egg-info/requires.txt
 frosta.egg-info/top_level.txt
 frosta/__pycache__/__init__.cpython-310.pyc
 frosta/__pycache__/frost_client.cpython-310.pyc
+frosta/__pycache__/plot.cpython-310.pyc
 frosta/__pycache__/query_functions.cpython-310.pyc
 frosta/__pycache__/utils.cpython-310.pyc

@@ -7,9 +7,10 @@ Author: Tomas Feseker
 Author-email: t.feseker@ahu.de
 License: LGPL3
 Keywords: sta,ogc,frost,sensorthingsapi,IoT
-Platform: UNKNOWN
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Requires-Dist: frost_sta_client
+Requires-Dist: geojson
 
 # Extended Sensorthings API Python Client
 
@@ -55,5 +56,3 @@ observations = client.get_observations(
 ## Further development
 
 This package will be developed further to facilitate the interaction with SensorThings services using dashboards. Contributions are welcome!
-
-
