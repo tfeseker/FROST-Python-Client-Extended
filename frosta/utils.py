@@ -25,9 +25,14 @@ def as_time_series(entity_list):
     else:
         name = 'n/a'
 
+    data = [obs.result for obs in entity_list]
+    index=pd.to_datetime([obs.phenomenon_time for obs in entity_list])
+    if index.tz is None:
+        index=index.tz_localize('UTC')
+
     return pd.Series(
-        data=[obs.result for obs in entity_list],
-        index=pd.to_datetime([obs.phenomenon_time for obs in entity_list]),
+        data=data,
+        index=index,
         name=name
     )    
 
