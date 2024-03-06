@@ -4,8 +4,6 @@ from geojson import Point
 from frost_sta_client.model.ext.entity_list import EntityList
 from frost_sta_client.model.ext.unitofmeasurement import UnitOfMeasurement
 from frost_sta_client.utils import transform_entity_to_json_dict
-from plotly.subplots import make_subplots
-import plotly.graph_objects as go
 import pandas as pd
 from .utils import as_dataframe
 import logging
@@ -356,71 +354,3 @@ class FrostClient():
             self.update(obs)
         ## delete old datastream
         self.delete(datastream)
-
-    def plot_observations(self, **kwargs):
-        obs = self.get_observations(**kwargs)
-
-        if obs == None or len(obs.entities) == 0:
-            return None # nothing to plot
-
-        df = as_dataframe(obs)
-        unique_ds = pd.unique(df.datastream_id)
-        n_ds = len(unique_ds)
-
-        df['datastream_name'] = None
-        df['unit_symbol'] = None
-        df['observed_property_id'] = None
-        df['observed_property_name'] = None
-        df['location_id'] = None
-        df['location_name'] = None
-        
-        datastreams = [self.get_datastreams(id=id) for id in unique_ds]
-        observed_properties = [self.get_observed_properties(relations=ds) for ds in datastreams]
-        locations = [self.get_locations(relations=ds) for ds in datastreams]
-
-        for i in range(len(unique_ds)):
-            df.loc[df['datastream_id']==unique_ds[i], 'datastream_name'] = datastreams[i].name
-            df.loc[df['datastream_id']==unique_ds[i], 'unit_symbol'] = datastreams[i].unit_of_measurement.symbol
-            df.loc[df['datastream_id']==unique_ds[i], 'observed_property_id'] = observed_properties[i].id
-            df.loc[df['datastream_id']==unique_ds[i], 'observed_property_name'] = observed_properties[i].name
-            df.loc[df['datastream_id']==unique_ds[i], 'location_id'] = locations[i].id
-            df.loc[df['datastream_id']==unique_ds[i], 'location_name'] = locations[i].name
-
-        unique_props = pd.unique(df.observed_property_name)
-        n_props = len(unique_props)
-        if len(pd.unique(df.observed_property_id)) != n_props:
-            logging.warning("The observations refer to different ObservedProperties with the same name!")
-        unique_locs = pd.unique(df.location_name)
-        n_locs = len(unique_locs)
-        if len(pd.unique(df.location_id)) != n_locs:
-            logging.warning("The observations refer to different Locations with the same name!")
-        
-        # one figure per observed property
-        fig = make_subplots(
-            rows=n_props,
-            cols=1,
-            shared_xaxes=True,
-            subplot_titles=unique_props,
-        )
-
-        for row in range(n_props):
-
-            df_subplot = df[df['observed_property_name'] == unique_props[row]]
-            unique_ds_subplot = pd.unique(df_subplot.datastream_id)
-
-            for id in unique_ds_subplot:
-                fig.add_trace(
-                    go.Scatter(
-                        x=df_subplot.loc[df_subplot['datastream_id']==id, 'phenomemon_time'],
-                        y=df_subplot.loc[df_subplot['datastream_id']==id, 'result'],
-                        name='test',
-                        legendgroup=row,
-                        legendgrouptitle_text=unique_props[row]
-                    ),
-                    row=row+1, col=1
-
-                )
-
-        fig.update_layout(title_text='Location')
-        
-        return fig
