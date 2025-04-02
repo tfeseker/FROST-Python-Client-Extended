@@ -27,7 +27,7 @@ def as_time_series(entity_list):
 
     return pd.Series(
         data=[obs.result for obs in entity_list],
-        index=pd.to_datetime([obs.phenomenon_time for obs in entity_list]),
+        index=pd.to_datetime([obs.phenomenon_time for obs in entity_list], format='ISO8601'),
         name=name
     )    
 

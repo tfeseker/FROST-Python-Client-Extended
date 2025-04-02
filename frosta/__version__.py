@@ -1,5 +1,5 @@
 __title__ = 'frosta'
-__version__ = '1.1'
+__version__ = '1.2'
 __license__ = 'LGPL3'
 __author__ = 'Tomas Feseker'
 __copyright__ = 'TerraSense GmbH'
