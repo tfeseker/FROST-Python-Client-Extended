@@ -14,7 +14,7 @@ def as_dataframe(entity_list):
             f'Conversion of EntityList of type {entity_list.entity_class} to DataFrame not yet implemented.'
             )
     
-def as_time_series(entity_list, tz = 'Europe/Berlin'):
+def as_time_series(entity_list):
     if not isinstance(entity_list, EntityList) \
         and entity_list.entity_class == 'frost_sta_client.model.observation.Observation':
     
@@ -24,7 +24,7 @@ def as_time_series(entity_list, tz = 'Europe/Berlin'):
         name = entity_list.get(0).datastream.id
         return pd.Series(
             data=[obs.result for obs in entity_list],
-            index=pd.to_datetime([obs.phenomenon_time for obs in entity_list], format='ISO8601').tz_convert(tz=tz),
+            index=pd.to_datetime([obs.phenomenon_time for obs in entity_list], format='ISO8601'),
             name=name
         )
     else:
