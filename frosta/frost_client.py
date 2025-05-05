@@ -1,6 +1,14 @@
 import frost_sta_client as fsc
 from .query_functions import get_entity_list
 from geojson import Point
+from datetime import datetime
+from frost_sta_client.model.entity import Entity
+from frost_sta_client.model.location import Location
+from frost_sta_client.model.thing import Thing
+from frost_sta_client.model.datastream import Datastream
+from frost_sta_client.model.sensor import Sensor
+from frost_sta_client.model.observedproperty import ObservedProperty
+from frost_sta_client.model.observation import Observation
 from frost_sta_client.model.ext.entity_list import EntityList
 from frost_sta_client.model.ext.unitofmeasurement import UnitOfMeasurement
 from frost_sta_client.utils import transform_entity_to_json_dict
@@ -18,7 +26,7 @@ class FrostClient():
         'OM_TruthObservation': 'http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_TruthObservation' # boolean
     }
 
-    def __init__(self, url=None, username='', password=''):
+    def __init__(self, url: str='', username:str='', password: str=''):
         auth_handler = fsc.AuthHandler(username, password)
         self.service = fsc.SensorThingsService(url, auth_handler)
         self.list_callback=None
@@ -58,7 +66,8 @@ class FrostClient():
     def step_size(self, value):
         self._step_size = value
 
-    def get_locations(self, id='', name='', description='', relations=None, **kwargs):
+    def get_locations(self, id: str='', name: str='', description: str='', 
+                      relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> EntityList:
         return get_entity_list(
             self.service.locations(),
             callback=self.list_callback,
@@ -70,7 +79,8 @@ class FrostClient():
             **kwargs
         )
 
-    def get_datastreams(self, id='', name='', description='', relations=None, **kwargs):
+    def get_datastreams(self, id: str='', name: str='', description: str='', 
+                        relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> EntityList:
         return get_entity_list(
             self.service.datastreams(),
             callback=self.list_callback,
@@ -82,7 +92,8 @@ class FrostClient():
             **kwargs
         )
 
-    def get_observed_properties(self, id='', name='', description='', relations=None, **kwargs):
+    def get_observed_properties(self, id: str='', name: str='', description: str='', 
+                                relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> EntityList:
         return get_entity_list(
             self.service.observed_properties(),
             callback=self.list_callback,
@@ -94,7 +105,8 @@ class FrostClient():
             **kwargs
         )
 
-    def get_things(self, id='', name='', description='', relations=None, **kwargs):
+    def get_things(self, id: str='', name: str='', description: str='', 
+                   relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> EntityList:
         return get_entity_list(
             self.service.things(),
             callback=self.list_callback,
@@ -106,7 +118,8 @@ class FrostClient():
             **kwargs
         )
 
-    def get_sensors(self, id='', name='', description='', relations=None, **kwargs):
+    def get_sensors(self, id: str='', name: str='', description: str='', 
+                    relations: Entity | EntityList | list[Entity] | None=None , **kwargs) -> EntityList:
         return get_entity_list(
             self.service.sensors(),
             callback=self.list_callback,
@@ -118,7 +131,9 @@ class FrostClient():
             **kwargs
         )
 
-    def get_observations(self, relations=None, start=None, end=None, lower_limit=None, upper_limit=None, **kwargs):
+    def get_observations(self, relations: Entity | EntityList | list[Entity] | None=None, 
+                         start: str | datetime | None=None, end: str | datetime | None=None, 
+                         lower_limit: float | None=None, upper_limit: float | None=None, **kwargs) -> EntityList:
         return get_entity_list(
             self.service.observations(),
             callback=self.list_callback,
@@ -131,7 +146,9 @@ class FrostClient():
             **kwargs
         )
     
-    def get_time_series(self, relations=None, start=None, end=None, lower_limit=None, upper_limit=None, **kwargs):
+    def get_time_series(self, relations: Entity | EntityList | list[Entity] | None=None, 
+                        start: str | datetime | None=None, end: str | datetime | None=None, 
+                        lower_limit: float | None=None, upper_limit: float | None=None, **kwargs) -> pd.Series:
         observations = get_entity_list(
             self.service.observations(),
             callback=self.list_callback,
@@ -145,15 +162,9 @@ class FrostClient():
         )
         return as_time_series(observations)
 
-    def create_location(self,
-            name='',
-            description='',
-            encoding_type='',
-            properties=None,
-            location=None,
-            things=None,
-            historical_locations=None,
-            **kwargs):
+    def create_location(self, name: str='', description: str='', encoding_type: str='', 
+                        properties: dict | None=None, location: Point | list[float] | dict | None=None, 
+                        things=None, historical_locations=None, **kwargs) -> Location:
 
         if not isinstance(location, Point):
             if isinstance(location, tuple) or isinstance(location, list):
@@ -182,16 +193,9 @@ class FrostClient():
             )
         )
 
-    def create_thing(self,
-            name='',
-            description='',
-            properties=None,
-            locations=None,
-            historical_locations=None,
-            datastreams=None,
-            multi_datastreams=None,
-            tasking_capabilities=None,
-            **kwargs):
+    def create_thing(self, name: str='', description: str='', properties: dict | None=None,
+                     locations=None, historical_locations=None, datastreams=None, multi_datastreams=None,
+                     tasking_capabilities=None,**kwargs) -> Thing:
 
         if locations is None and 'location' in kwargs.keys():
             locations = kwargs.get("location")
@@ -213,23 +217,16 @@ class FrostClient():
             )
         )
 
-    def create_unit_of_measurement(self, name='', symbol='', definition=''):
+    def create_unit_of_measurement(self, name: str='', symbol: str='', definition: str='') -> UnitOfMeasurement:
         return UnitOfMeasurement(
             name=name,
             symbol=symbol,
             definition=definition
         )
     
-    def create_datastream(self,
-            name='',
-            description='',
-            observation_type='',
-            unit_of_measurement=None,
-            properties=None,
-            thing=None,
-            sensor=None,
-            observed_property=None,
-            **kwargs):
+    def create_datastream(self, name: str, description: str, observation_type: str,
+                          unit_of_measurement: UnitOfMeasurement, properties=None, thing=None,
+                          sensor=None, observed_property=None, **kwargs) -> Datastream:
 
         if thing is None:
             raise ValueError('Cannot create Datastream without Thing!')
@@ -254,15 +251,9 @@ class FrostClient():
             )
         )
 
-    def create_sensor(self,
-            name='',
-            description='',
-            encoding_type='',
-            properties=None,
-            metadata=None,
-            datastreams=None,
-            multi_datastreams=None,
-            **kwargs):
+    def create_sensor(self, name: str='', description: str='', encoding_type: str='',
+                      properties: dict | None=None, metadata: str | None=None, datastreams=None, 
+                      multi_datastreams=None, **kwargs) -> Sensor:
 
         return self.create(
             fsc.Sensor(
@@ -277,14 +268,9 @@ class FrostClient():
             )
         )
 
-    def create_observed_property(self,
-            name='',
-            definition='',
-            description='',
-            datastreams=None,
-            properties=None,
-            multi_datastreams=None,
-            **kwargs):
+    def create_observed_property(self, name: str='', definition: str='', description: str='',
+                                 datastreams=None, properties: dict | None=None,
+                                 multi_datastreams=None, **kwargs) -> ObservedProperty:
 
         return self.create(
             fsc.ObservedProperty(
@@ -298,22 +284,15 @@ class FrostClient():
             )
         )
 
-    def create_observation(self,
-            phenomenon_time=None,
-            result=None,
-            result_time=None,
-            result_quality=None,
-            valid_time=None,
-            parameters=None,
-            datastream=None,
-            multi_datastream=None,
-            feature_of_interest=None,
-            **kwargs):
+    def create_observation(self, phenomenon_time: str | datetime | None=None, result=None,
+                           result_time=None, result_quality=None, valid_time=None, parameters=None,
+                           datastream: Datastream | None=None, multi_datastream=None, 
+                           feature_of_interest=None,**kwargs) -> Observation:
 
         if datastream is None:
             raise ValueError('Cannot create Observation without Datastream')
 
-        self.create(
+        return self.create(
             fsc.Observation(
                 phenomenon_time=phenomenon_time,
                 result=result,
