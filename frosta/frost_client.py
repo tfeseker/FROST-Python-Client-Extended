@@ -148,7 +148,8 @@ class FrostClient():
     
     def get_time_series(self, relations: Entity | EntityList | list[Entity] | None=None, 
                         start: str | datetime | None=None, end: str | datetime | None=None, 
-                        lower_limit: float | None=None, upper_limit: float | None=None, **kwargs) -> pd.Series:
+                        lower_limit: float | None=None, upper_limit: float | None=None, 
+                        tz: str='Europe/Berlin', **kwargs) -> pd.Series:
         observations = get_entity_list(
             self.service.observations(),
             callback=self.list_callback,
@@ -160,7 +161,7 @@ class FrostClient():
             upper_limit=upper_limit,
             **kwargs
         )
-        return as_time_series(observations)
+        return as_time_series(observations, tz=tz)
 
     def create_location(self, name: str='', description: str='', encoding_type: str='', 
                         properties: dict | None=None, location: Point | list[float] | dict | None=None, 
