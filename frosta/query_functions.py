@@ -53,7 +53,7 @@ RELATIONS = {
 }
 
 def get_relation(origin, target):
-    return RELATIONS.get(origin).get(target)
+    return RELATIONS.get(origin, {}).get(target)
 
 def get_entity_list(entities, callback=None, step_size=None, **kwargs):
     query = entities.query()
@@ -61,9 +61,9 @@ def get_entity_list(entities, callback=None, step_size=None, **kwargs):
     query = add_expansion(query, **kwargs)
     query = add_order(query, **kwargs)
     query = add_chunks(query, **kwargs)
-    
+
     return query.count().list(callback, step_size)
-    
+
     # match len(entity_list.entities):
     #     case 0:
     #         return None

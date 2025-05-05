@@ -5,7 +5,7 @@ from frost_sta_client.model.ext.entity_list import EntityList
 from frost_sta_client.model.ext.unitofmeasurement import UnitOfMeasurement
 from frost_sta_client.utils import transform_entity_to_json_dict
 import pandas as pd
-from .utils import as_dataframe
+from .utils import as_dataframe, as_time_series
 import logging
 
 class FrostClient():
@@ -130,6 +130,20 @@ class FrostClient():
             upper_limit=upper_limit,
             **kwargs
         )
+    
+    def get_time_series(self, relations=None, start=None, end=None, lower_limit=None, upper_limit=None, **kwargs):
+        observations = get_entity_list(
+            self.service.observations(),
+            callback=self.list_callback,
+            step_size=self.step_size,
+            relations=relations,
+            start=start,
+            end=end,
+            lower_limit=lower_limit,
+            upper_limit=upper_limit,
+            **kwargs
+        )
+        return as_time_series(observations)
 
     def create_location(self,
             name='',
