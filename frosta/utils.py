@@ -14,7 +14,7 @@ def as_dataframe(entity_list):
             f'Conversion of EntityList of type {entity_list.entity_class} to DataFrame not yet implemented.'
             )
     
-def as_time_series(entity_list, tz: str='Europe/Berlin'):
+def as_time_series(entity_list, tz: str='UTC'):
     if not isinstance(entity_list, EntityList) \
         and entity_list.entity_class == 'frost_sta_client.model.observation.Observation':
     
