@@ -1,4 +1,7 @@
 import pandas as pd
+import pytz
+
+
 from frost_sta_client.model.ext.entity_list import EntityList
 
 def as_dataframe(entity_list):
@@ -14,7 +17,7 @@ def as_dataframe(entity_list):
             f'Conversion of EntityList of type {entity_list.entity_class} to DataFrame not yet implemented.'
             )
     
-def as_time_series(entity_list, tz: str='UTC'):
+def as_time_series(entity_list, tz = 'UTC'):
     if not isinstance(entity_list, EntityList) \
         and entity_list.entity_class == 'frost_sta_client.model.observation.Observation':
     
@@ -27,5 +30,3 @@ def as_time_series(entity_list, tz: str='UTC'):
             index=pd.to_datetime([obs.phenomenon_time for obs in entity_list], format='ISO8601').tz_convert(tz),
             name=name
         )
-    else:
-        return pd.Series(name = 'n/a')
