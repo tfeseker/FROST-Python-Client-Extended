@@ -149,7 +149,7 @@ class FrostClient():
     def get_time_series(self, relations: Entity | EntityList | list[Entity] | None=None, 
                         start: str | datetime | None=None, end: str | datetime | None=None, 
                         lower_limit: float | None=None, upper_limit: float | None=None, 
-                        tz: str='Europe/Berlin', **kwargs) -> pd.Series:
+                        tz: str='UTC', **kwargs) -> pd.Series | None:
         observations = get_entity_list(
             self.service.observations(),
             callback=self.list_callback,

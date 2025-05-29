@@ -1,4 +1,5 @@
 import pandas as pd
+import datetime
 import pytz
 
 
@@ -17,7 +18,7 @@ def as_dataframe(entity_list):
             f'Conversion of EntityList of type {entity_list.entity_class} to DataFrame not yet implemented.'
             )
     
-def as_time_series(entity_list, tz = 'UTC'):
+def as_time_series(entity_list, tz: str | pytz.tzinfo.BaseTzInfo | datetime.timezone = 'UTC'):
     if not isinstance(entity_list, EntityList) \
         and entity_list.entity_class == 'frost_sta_client.model.observation.Observation':
     
