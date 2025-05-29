@@ -1,7 +1,8 @@
 import frost_sta_client as fsc
 from .query_functions import get_entity_list
 from geojson import Point
-from datetime import datetime
+from datetime import datetime, timezone
+import pytz
 from frost_sta_client.model.entity import Entity
 from frost_sta_client.model.location import Location
 from frost_sta_client.model.thing import Thing
@@ -149,7 +150,7 @@ class FrostClient():
     def get_time_series(self, relations: Entity | EntityList | list[Entity] | None=None, 
                         start: str | datetime | None=None, end: str | datetime | None=None, 
                         lower_limit: float | None=None, upper_limit: float | None=None, 
-                        tz: str='UTC', **kwargs) -> pd.Series | None:
+                        tz: str | pytz.tzinfo.BaseTzInfo | timezone ='UTC', **kwargs) -> pd.Series | None:
         observations = get_entity_list(
             self.service.observations(),
             callback=self.list_callback,
