@@ -125,9 +125,9 @@ def add_order(query, **kwargs):
     return query.orderby('name', order = 'asc')
 
 def add_chunks(query, **kwargs):
-    if 'skip' in kwargs.keys():
+    if 'skip' in kwargs.keys() and kwargs.get('skip') is not None:
         query = query.skip(kwargs.get('skip'))
-    if 'top' in kwargs.keys():
+    if 'top' in kwargs.keys() and kwargs.get('top') is not None:
         query = query.top(kwargs.get('top'))
     return query
 
