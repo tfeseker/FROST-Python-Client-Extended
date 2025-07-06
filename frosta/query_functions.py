@@ -58,6 +58,7 @@ def get_relation(origin, target):
 def get_entity_list(entities, callback=None, step_size=None, **kwargs):
     query = entities.query()
     query = add_filters(query, **kwargs)
+    query = add_selection(query, **kwargs)
     query = add_expansion(query, **kwargs)
     query = add_order(query, **kwargs)
     query = add_chunks(query, **kwargs)
