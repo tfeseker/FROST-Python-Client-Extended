@@ -84,7 +84,8 @@ def add_filters(query, **kwargs):
                     + [entity_list for entity_list in value if isinstance(entity_list, EntityList)]
             for relative in relations:
                 filter = get_relation_filter(query.entity, relative)
-                filters.append(filter)
+                if filter is not None:
+                    filters.append(filter)
         elif key in ['id', 'name', 'description'] and value != '':
             filters.append(get_string_filter(key, value))
         elif key in ['start', 'end'] and value is not None:
@@ -95,6 +96,20 @@ def add_filters(query, **kwargs):
     if len(filters) > 0:
         return query.filter(' and '.join(filters))
     return query
+
+def add_selection(query, **kwargs):
+    if 'select' in kwargs.keys():
+        select = kwargs.get('select')
+        if isinstance(select, str):
+            return query.select(select)
+        elif isinstance(select, list):
+            return query.select(*select)
+    if query.entity == 'Observation':
+        return query.select('phenomenonTime', 'result', 'resultTime', 'Datastream')
+    if query.entity == 'Datastream':
+        return query.select('name', 'description', 'observationType', 'unitOfMeasurement',
+                            'Thing', 'ObservedProperty', 'Sensor')
+    return query.select('name', 'description')
 
 def add_expansion(query, **kwargs):
     if query.entity == 'Datastream':
@@ -124,12 +139,14 @@ def get_relation_filter(origin, target):
     if isinstance(target, fsc.model.ext.entity_list.EntityList):
         _, target_entity = target.entity_class.rsplit('.', 1)
         relation = get_relation(origin, target_entity)
-        ids = [entity.id for entity in target]
-        alternatives = [f"'{i}' eq " + relation + '/id' for i in ids]
-        return '(' + ' or '.join(alternatives) + ')'
+        if relation is not None:
+            ids = [entity.id for entity in target]
+            alternatives = [f"'{i}' eq " + relation + '/id' for i in ids]
+            return '(' + ' or '.join(alternatives) + ')'
     if isinstance(target, fsc.model.entity.Entity):
         relation = get_relation(origin, type(target).__name__)
-        return f"'{target.id}' eq " + relation + '/id'
+        if relation is not None:
+            return f"'{target.id}' eq " + relation + '/id'
 
 def get_string_filter(key, value):
     value = value.lower()
