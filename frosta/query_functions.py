@@ -105,12 +105,7 @@ def add_selection(query, **kwargs):
             return query.select(select)
         elif isinstance(select, list):
             return query.select(*select)
-    if query.entity == 'Observation':
-        return query.select('phenomenonTime', 'result', 'resultTime', 'Datastream')
-    if query.entity == 'Datastream':
-        return query.select('name', 'description', 'observationType', 'unitOfMeasurement',
-                            'Thing', 'ObservedProperty', 'Sensor')
-    return query.select('name', 'description')
+    return query
 
 def add_expansion(query, **kwargs):
     if query.entity == 'Datastream':
