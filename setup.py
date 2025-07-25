@@ -22,7 +22,9 @@ setup(
     packages=find_packages(),
     install_requires=[
         'frost_sta_client',
-        'geojson'
+        'geojson',
+        'pandas',
+        'pytz'
     ],
     keywords=['sta', 'ogc', 'frost', 'sensorthingsapi', 'IoT']
 )
