@@ -1,4 +1,4 @@
-frost-sta-client @ git+https://github.com/tfeseker/FROST-Python-Client.git
 geojson
 pandas
 pytz
+frost-sta-client @ git+https://github.com/tfeseker/FROST-Python-Client.git
