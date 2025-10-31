@@ -164,6 +164,23 @@ class FrostClient():
         )
         return as_time_series(observations, tz=tz)
 
+    def get_observations_list(self, relations: Entity | EntityList | list[Entity] | None=None, 
+                        start: str | datetime | None=None, end: str | datetime | None=None, 
+                        lower_limit: float | None=None, upper_limit: float | None=None, 
+                        tz: str | pytz.tzinfo.BaseTzInfo | timezone ='UTC', **kwargs) -> list | None:
+        observations = get_entity_list(
+            self.service.observations(),
+            callback=self.list_callback,
+            step_size=self.step_size,
+            relations=relations,
+            start=start,
+            end=end,
+            lower_limit=lower_limit,
+            upper_limit=upper_limit,
+            **kwargs
+        )
+        return [{'phenomenon_time': obs.phenomenon_time, 'result': obs.result} for obs in observations.entities]
+
     def create_location(self, name: str='', description: str='', encoding_type: str='', 
                         properties: dict | None=None, location: Point | list[float] | dict | None=None, 
                         things=None, historical_locations=None, **kwargs) -> Location:
