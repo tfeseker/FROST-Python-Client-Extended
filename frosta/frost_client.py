@@ -67,6 +67,12 @@ class FrostClient():
     def step_size(self, value):
         self._step_size = value
 
+    def single_entity(self, entity_list: EntityList) -> Entity | None:
+        if len(entity_list.entities)>0:
+            return entity_list.get(0)
+        else:
+            return None
+
     def get_locations(self, id: str='', name: str='', description: str='', 
                       relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> EntityList:
         return get_entity_list(
@@ -79,7 +85,21 @@ class FrostClient():
             relations=relations,
             **kwargs
         )
-
+    
+    def get_location(self, id: str='', name: str='', description: str='', 
+                      relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> EntityList:
+        entity_list = get_entity_list(
+            self.service.locations(),
+            callback=self.list_callback,
+            step_size=self.step_size,
+            id=id,
+            name=name,
+            description=description,
+            relations=relations,
+            **kwargs
+        )
+        return self.single_entity(entity_list)
+    
     def get_datastreams(self, id: str='', name: str='', description: str='', 
                         relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> EntityList:
         return get_entity_list(
@@ -93,6 +113,20 @@ class FrostClient():
             **kwargs
         )
 
+    def get_datastream(self, id: str='', name: str='', description: str='', 
+                        relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> Datastream | None:
+        entity_list = get_entity_list(
+            self.service.datastreams(),
+            callback=self.list_callback,
+            step_size=self.step_size,
+            id=id,
+            name=name,
+            description=description,
+            relations=relations,
+            **kwargs
+        )
+        return self.single_entity(entity_list)
+    
     def get_observed_properties(self, id: str='', name: str='', description: str='', 
                                 relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> EntityList:
         return get_entity_list(
@@ -105,6 +139,21 @@ class FrostClient():
             relations=relations,
             **kwargs
         )
+
+    def get_observed_property(self, id: str='', name: str='', description: str='', 
+                                relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> EntityList:
+        entity_list = get_entity_list(
+            self.service.observed_properties(),
+            callback=self.list_callback,
+            step_size=self.step_size,
+            id=id,
+            name=name,
+            description=description,
+            relations=relations,
+            **kwargs
+        )
+        return self.single_entity(entity_list)
+    
 
     def get_things(self, id: str='', name: str='', description: str='', 
                    relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> EntityList:
@@ -119,6 +168,20 @@ class FrostClient():
             **kwargs
         )
 
+    def get_thing(self, id: str='', name: str='', description: str='', 
+                   relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> EntityList:
+        entity_list = get_entity_list(
+            self.service.things(),
+            callback=self.list_callback,
+            step_size=self.step_size,
+            id=id,
+            name=name,
+            description=description,
+            relations=relations,
+            **kwargs
+        )
+        return self.single_entity(entity_list)
+
     def get_sensors(self, id: str='', name: str='', description: str='', 
                     relations: Entity | EntityList | list[Entity] | None=None , **kwargs) -> EntityList:
         return get_entity_list(
@@ -131,6 +194,19 @@ class FrostClient():
             relations=relations,
             **kwargs
         )
+    def get_sensor(self, id: str='', name: str='', description: str='', 
+                    relations: Entity | EntityList | list[Entity] | None=None , **kwargs) -> EntityList:
+        entity_list = get_entity_list(
+            self.service.sensors(),
+            callback=self.list_callback,
+            step_size=self.step_size,
+            id=id,
+            name=name,
+            description=description,
+            relations=relations,
+            **kwargs
+        )
+        return self.single_entity(entity_list)
 
     def get_observations(self, relations: Entity | EntityList | list[Entity] | None=None, 
                          start: str | datetime | None=None, end: str | datetime | None=None, 
@@ -146,6 +222,21 @@ class FrostClient():
             upper_limit=upper_limit,
             **kwargs
         )
+    def get_observation(self, relations: Entity | EntityList | list[Entity] | None=None, 
+                         start: str | datetime | None=None, end: str | datetime | None=None, 
+                         lower_limit: float | None=None, upper_limit: float | None=None, **kwargs) -> EntityList:
+        entity_list = get_entity_list(
+            self.service.observations(),
+            callback=self.list_callback,
+            step_size=self.step_size,
+            relations=relations,
+            start=start,
+            end=end,
+            lower_limit=lower_limit,
+            upper_limit=upper_limit,
+            **kwargs
+        )
+        return self.single_entity(entity_list)
     
     def get_time_series(self, relations: Entity | EntityList | list[Entity] | None=None, 
                         start: str | datetime | None=None, end: str | datetime | None=None, 
