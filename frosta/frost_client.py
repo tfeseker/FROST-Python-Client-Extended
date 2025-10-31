@@ -14,7 +14,8 @@ from frost_sta_client.model.ext.entity_list import EntityList
 from frost_sta_client.model.ext.unitofmeasurement import UnitOfMeasurement
 from frost_sta_client.utils import transform_entity_to_json_dict
 import pandas as pd
-from .utils import as_dataframe, as_time_series
+from .utils import as_time_series
+from dateutil.parser import isoparse
 import logging
 
 class FrostClient():
@@ -270,7 +271,7 @@ class FrostClient():
             upper_limit=upper_limit,
             **kwargs
         )
-        return [{'phenomenon_time': obs.phenomenon_time, 'result': obs.result} for obs in observations.entities]
+        return [{'phenomenon_time': isoparse(obs.phenomenon_time), 'result': obs.result} for obs in observations.entities]
 
     def create_location(self, name: str='', description: str='', encoding_type: str='', 
                         properties: dict | None=None, location: Point | list[float] | dict | None=None, 
