@@ -259,7 +259,7 @@ class FrostClient():
     def get_observations_list(self, relations: Entity | EntityList | list[Entity] | None=None, 
                         start: str | datetime | None=None, end: str | datetime | None=None, 
                         lower_limit: float | None=None, upper_limit: float | None=None, 
-                        tz: str | pytz.tzinfo.BaseTzInfo | timezone ='UTC', **kwargs) -> list | None:
+                        tz: str | pytz.tzinfo.BaseTzInfo | timezone ='UTC', **kwargs) -> list[dict]:
         observations = get_entity_list(
             self.service.observations(),
             callback=self.list_callback,
