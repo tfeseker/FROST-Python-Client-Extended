@@ -271,7 +271,7 @@ class FrostClient():
             upper_limit=upper_limit,
             **kwargs
         )
-        return [{'phenomenon_time': isoparse(obs.phenomenon_time), 'result': obs.result} for obs in observations.entities]
+        return [{'phenomenon_time': isoparse(obs.phenomenon_time), 'result': obs.result} for obs in observations]
 
     def create_location(self, name: str='', description: str='', encoding_type: str='', 
                         properties: dict | None=None, location: Point | list[float] | dict | None=None, 
