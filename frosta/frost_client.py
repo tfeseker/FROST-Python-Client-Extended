@@ -88,7 +88,7 @@ class FrostClient():
         )
     
     def get_location(self, id: str='', name: str='', description: str='', 
-                      relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> EntityList:
+                      relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> Location | None:
         entity_list = get_entity_list(
             self.service.locations(),
             callback=self.list_callback,
@@ -144,7 +144,7 @@ class FrostClient():
         )
 
     def get_observed_property(self, id: str='', name: str='', description: str='', 
-                                relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> EntityList:
+                                relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> ObservedProperty | None:
         entity_list = get_entity_list(
             self.service.observed_properties(),
             callback=self.list_callback,
@@ -173,7 +173,7 @@ class FrostClient():
         )
 
     def get_thing(self, id: str='', name: str='', description: str='', 
-                   relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> EntityList:
+                   relations: Entity | EntityList | list[Entity] | None=None, **kwargs) -> Thing | None:
         entity_list = get_entity_list(
             self.service.things(),
             callback=self.list_callback,
@@ -200,7 +200,7 @@ class FrostClient():
             **kwargs
         )
     def get_sensor(self, id: str='', name: str='', description: str='', 
-                    relations: Entity | EntityList | list[Entity] | None=None , **kwargs) -> EntityList:
+                    relations: Entity | EntityList | list[Entity] | None=None , **kwargs) -> Sensor | None:
         entity_list = get_entity_list(
             self.service.sensors(),
             callback=self.list_callback,
@@ -230,7 +230,7 @@ class FrostClient():
         )
     def get_observation(self, relations: Entity | EntityList | list[Entity] | None=None, 
                          start: str | datetime | None=None, end: str | datetime | None=None, 
-                         lower_limit: float | None=None, upper_limit: float | None=None, **kwargs) -> EntityList:
+                         lower_limit: float | None=None, upper_limit: float | None=None, **kwargs) -> Observation | None:
         entity_list = get_entity_list(
             self.service.observations(),
             callback=self.list_callback,
