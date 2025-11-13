@@ -97,6 +97,7 @@ class FrostClient():
             name=name,
             description=description,
             relations=relations,
+            top=1,
             **kwargs
         )
         return self.single_entity(entity_list)
@@ -124,6 +125,7 @@ class FrostClient():
             name=name,
             description=description,
             relations=relations,
+            top=1,
             **kwargs
         )
         return self.single_entity(entity_list)
@@ -151,6 +153,7 @@ class FrostClient():
             name=name,
             description=description,
             relations=relations,
+            top=1,
             **kwargs
         )
         return self.single_entity(entity_list)
@@ -179,6 +182,7 @@ class FrostClient():
             name=name,
             description=description,
             relations=relations,
+            top=1,
             **kwargs
         )
         return self.single_entity(entity_list)
@@ -205,6 +209,7 @@ class FrostClient():
             name=name,
             description=description,
             relations=relations,
+            top=1,
             **kwargs
         )
         return self.single_entity(entity_list)
@@ -235,6 +240,7 @@ class FrostClient():
             end=end,
             lower_limit=lower_limit,
             upper_limit=upper_limit,
+            top=1,
             **kwargs
         )
         return self.single_entity(entity_list)
