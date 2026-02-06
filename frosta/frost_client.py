@@ -1,4 +1,5 @@
 import frost_sta_client as fsc
+from .http_session import patch_frost_service_with_session, FrostHTTPSession
 from .query_functions import get_entity_list
 from geojson import Point
 from datetime import datetime, timezone
@@ -28,12 +29,25 @@ class FrostClient():
         'OM_TruthObservation': 'http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_TruthObservation' # boolean
     }
 
-    def __init__(self, url: str='', username:str='', password: str=''):
+    def __init__(self, url: str='', username:str='', password: str='', use_session_pooling: bool=True):
+        """
+        Initialize FROST client.
+        
+        Args:
+            url: FROST server URL
+            username: Authentication username
+            password: Authentication password
+            use_session_pooling: Enable HTTP connection pooling for better performance (default: True)
+        """
         auth_handler = fsc.AuthHandler(username, password)
         self.service = fsc.SensorThingsService(url, auth_handler)
         self.list_callback=None
         self.step_size=None
-
+        self._http_session = None
+        
+        # Enable connection pooling by default for better performance
+        if use_session_pooling:
+            self._http_session = patch_frost_service_with_session(self.service)
     @property
     def service(self):
         return self._service
@@ -463,4 +477,16 @@ class FrostClient():
             obs.datastream = new_datastream
             self.update(obs)
         ## delete old datastream
+
+    def close(self):
+        """Close HTTP session and clean up resources."""
+        if self._http_session is not None:
+            self._http_session.close()
+            self._http_session = None
+    
+    def __enter__(self):
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
         self.delete(datastream)
