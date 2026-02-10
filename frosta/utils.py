@@ -24,15 +24,13 @@ def as_dataframe(entity_list):
         )
     
 def as_time_series(entity_list, tz: str | pytz.tzinfo.BaseTzInfo | datetime.timezone = 'UTC'):
-    # Fixed logic bug: should be OR not AND
     if not isinstance(entity_list, EntityList) \
         or entity_list.entity_class != 'frost_sta_client.model.observation.Observation':
         raise ValueError("Only EntityLists of Observations can be converted to Time Series!")
     
     if len(entity_list.entities) == 0:
         return None
-        
-    # Single-pass extraction: iterate once instead of twice
+
     times = []
     results = []
     name = None
